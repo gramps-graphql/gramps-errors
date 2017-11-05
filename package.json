@@ -1,0 +1,75 @@
+{
+  "name": "@gramps/errors",
+  "version": "0.0.0-development",
+  "description": "GraphQL error handling. Part of the GrAMPS family.",
+  "main": "dist/index.js",
+  "files": [
+    "dist/",
+    "config/",
+    "bin/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gramps-graphql/gramps-errors.git"
+  },
+  "contributors": [
+    "Jason Lengstorf <jason.lengstorf@ibm.com>"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "prepush": "npm test",
+    "prebuild": "del-cli ./dist",
+    "build": "babel src -d dist",
+    "lint": "eslint src/**/*.js",
+    "test": "npm run lint --silent && npm run test:unit --silent",
+    "test:unit": "cross-env NODE_ENV=test jest --coverage",
+    "semantic-release": "semantic-release pre && npm publish --access public && semantic-release post"
+  },
+  "dependencies": {
+    "cross-env": "^5.1.1",
+    "graphql-apollo-errors": "^2.0.2",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-eslint": "^8.0.1",
+    "babel-jest": "^21.2.0",
+    "babel-plugin-inline-import": "^2.0.6",
+    "babel-preset-env": "^1.6.0",
+    "del-cli": "^1.0.0",
+    "eslint": "^4.2.0",
+    "eslint-config-airbnb-base": "^12.0.2",
+    "eslint-config-prettier": "^2.3.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-prettier": "^2.1.2",
+    "husky": "^0.14.3",
+    "jest": "^21.2.1",
+    "prettier": "^1.5.3",
+    "semantic-release": "^8.0.3"
+  },
+  "jest": {
+    "coverageReporters": [
+      "text-summary",
+      "lcov"
+    ],
+    "collectCoverageFrom": [
+      "{src}/**/*.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "keywords": [
+    "graphql",
+    "apollo"
+  ]
+}
