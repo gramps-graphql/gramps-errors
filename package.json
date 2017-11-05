@@ -23,7 +23,7 @@
     "lint": "eslint src/**/*.js",
     "test": "npm run lint --silent && npm run test:unit --silent",
     "test:unit": "cross-env NODE_ENV=test jest --coverage",
-    "semantic-release": "semantic-release pre && npm publish --access public && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
     "cross-env": "^5.1.1",
@@ -46,7 +46,7 @@
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "prettier": "^1.5.3",
-    "semantic-release": "^8.0.3"
+    "semantic-release": "^8.2.0"
   },
   "jest": {
     "coverageReporters": [
