@@ -5,6 +5,7 @@ import {
   formatClientErrorData,
   printDetailedServerLog,
   handleQueryErrors,
+  deserializeError,
 } from '../src';
 
 const defaultLogger = {
@@ -285,6 +286,59 @@ describe('GrAMPS Errors', () => {
         'https://example.org/test/endpoint',
       );
       expect(error.output.payload.docsLink).toBe('https://example.org/docs');
+    });
+
+    it('serializes errors', () => {
+      const payload = {
+        statusCode: 418,
+        message: 'error message',
+        description: 'error description',
+        graphqlModel: 'TestModel',
+        targetEndpoint: 'https://example.org/test/endpoint',
+        docsLink: 'https://example.org/docs',
+      };
+
+      const serializedError = GrampsError(payload, true);
+      const deserializedError = JSON.parse(serializedError.message);
+
+      expect(deserializedError.isBoom).toBe(true);
+      expect(deserializedError.output.statusCode).toBe(418);
+      expect(deserializedError.output.payload.message).toBe('error message');
+      expect(deserializedError.output.payload.description).toBe(
+        'error description',
+      );
+      expect(deserializedError.output.payload.graphqlModel).toBe('TestModel');
+      expect(deserializedError.output.payload.targetEndpoint).toBe(
+        'https://example.org/test/endpoint',
+      );
+      expect(deserializedError.output.payload.docsLink).toBe(
+        'https://example.org/docs',
+      );
+    });
+  });
+
+  describe('deserializeError()', () => {
+    it('can deserialize errors', () => {
+      const payload = {
+        statusCode: 418,
+        message: 'error message',
+        description: 'error description',
+        graphqlModel: 'TestModel',
+        targetEndpoint: 'https://example.org/test/endpoint',
+        docsLink: 'https://example.org/docs',
+      };
+
+      const serializedError = GrampsError(payload, true);
+      const deserializedError = deserializeError(serializedError);
+
+      expect(deserializedError.message).toBe('error message');
+    });
+
+    it('can handle invalid json', () => {
+      const regularError = Error('Whoops! Something went wrong.');
+      const deserializedError = deserializeError(regularError);
+
+      expect(deserializedError.message).toBe('Whoops! Something went wrong.');
     });
   });
 });
