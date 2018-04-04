@@ -61,7 +61,8 @@ initSevenBoom([...customErrorFields]);
  * @param  {string?}        config.graphqlModel    which GraphQL model errored
  * @param  {string?}        config.targetEndpoint  where data was loaded from
  * @param  {string?}        config.docsLink        link to help docs
- * @return {Error}                                 SevenBoom error for output
+ * @param  {boolean?}       serializeError        whether to serialize the error into JSON
+ * @return {Error}                                SevenBoom error for output, or normal Error if serialized
  */
 export function GrampsError(
   {
@@ -75,6 +76,7 @@ export function GrampsError(
     targetEndpoint = null,
     docsLink = null,
   } = {},
+  serializeError = false,
 ) {
   const httpErrorCode = statusCode || error.statusCode || 500;
 
@@ -94,7 +96,17 @@ export function GrampsError(
   ]);
 
   // Call the function and spread the args array into individual arguments.
-  return SevenBoom[fn](...args);
+  const boom = SevenBoom[fn](...args);
+
+  // If specified, serialize the error into a JSON string so it can be parsed later.
+  if (serializeError) {
+    const serializedBoom = JSON.stringify(boom);
+
+    return Error(serializedBoom);
+  }
+
+  // Otherwise, just return the error.
+  return boom;
 }
 
 /**
@@ -194,6 +206,27 @@ export const formatClientErrorData = error => {
   /* eslint-enable no-param-reassign */
 
   return error;
+};
+
+/**
+ * Attempts to deserialize a stringified error message.
+ * @param  {Error} error
+ * @return {Error}
+ */
+export const deserializeError = error => {
+  // If the error message is valid JSON, we convert it back to a GrAMPS error.
+  try {
+    const deserialized = JSON.parse(error.message);
+    const payload = deserialized.output.payload;
+
+    return GrampsError({
+      ...payload,
+      error: Error(),
+    });
+  } catch (exception) {
+    // If not, we just pass it through
+    return error;
+  }
 };
 
 /**
