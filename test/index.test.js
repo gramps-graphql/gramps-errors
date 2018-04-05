@@ -243,7 +243,7 @@ describe('GrAMPS Errors', () => {
       const error = GrampsError();
       const defaultError = 'Internal Server Error';
       const defaultMessage = 'An internal server error occurred';
-      const defaultErrorCode = 'BLUEMIX_GRAPHQL_ERROR';
+      const defaultErrorCode = 'GRAMPS_ERROR';
 
       expect(error.isBoom).toBe(true);
       expect(error.isServer).toBe(true);

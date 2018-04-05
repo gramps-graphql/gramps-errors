@@ -24,7 +24,7 @@ const customErrorFields = [
     label: 'Error Code',
     name: 'errorCode',
     order: 2,
-    default: 'BLUEMIX_GRAPHQL_ERROR',
+    default: 'GRAMPS_ERROR',
   },
   {
     label: 'GraphQL Model',
@@ -71,7 +71,7 @@ export function GrampsError(
     data = null,
     message = '',
     description = null,
-    errorCode = 'BLUEMIX_GRAPHQL_ERROR',
+    errorCode = 'GRAMPS_ERROR',
     graphqlModel = null,
     targetEndpoint = null,
     docsLink = null,
